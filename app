@@ -16,11 +16,15 @@
     <div class="bg-white p-8 rounded shadow-md w-full max-w-sm text-center">
       <h1 class="text-3xl font-bold mb-4">感情分析日記アプリ</h1>
       <p class="mb-6">ユーザーを選択してください</p>
-      <!-- かわいいキャラクターアイコン -->
-      <img src="https://placekitten.com/120/120" alt="Cute Character" class="mx-auto mb-6 rounded-full border-4 border-pink-300">
+      <!-- 各ユーザーボタン内にキャラクターアイコンを表示（かなれいのみ） -->
       <div class="flex flex-col gap-4">
-        <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 rounded" onclick="login('ともき')">ともき</button>
-        <button class="bg-pink-500 hover:bg-pink-600 text-white py-2 rounded" onclick="login('かなれい')">かなれい</button>
+        <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 rounded" onclick="login('ともき')">
+          ともき
+        </button>
+        <button class="bg-pink-500 hover:bg-pink-600 text-white py-2 rounded flex items-center justify-center gap-2" onclick="login('かなれい')">
+          <img src="https://cdn.discordapp.com/attachments/1162299993038803074/1337437947842265118/E372E041-CF6C-4946-B0E6-F3C52099B6D2.png?ex=67a771a7&is=67a62027&hm=c553d26695afade285be8ec5502426464b231d2aaaf7588a3aed36096f9c4f5d" alt="かなれい Icon" class="w-6 h-6">
+          かなれい
+        </button>
       </div>
     </div>
   </div>
@@ -30,8 +34,7 @@
     <!-- ヘッダー -->
     <header class="bg-white shadow p-4 flex justify-between items-center">
       <div class="flex items-center space-x-3">
-        <!-- ヘッダーキャラクターアイコン -->
-        <img src="https://placekitten.com/50/50" alt="User Icon" class="rounded-full border-2 border-blue-300">
+        <!-- ヘッダーキャラクターアイコン（削除済み） -->
         <h1 class="text-2xl font-bold">感情分析日記アプリ</h1>
       </div>
       <div class="flex items-center space-x-4">
@@ -53,8 +56,7 @@
         <div class="mt-4 flex flex-wrap items-center gap-4">
           <button id="voiceBtn" class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded">音声入力</button>
           <button id="saveBtn" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">保存</button>
-          <!-- かわいいキャラクター -->
-          <img src="https://placekitten.com/60/60" alt="Cute Character" class="rounded-full border-2 border-green-300">
+          <!-- 入力エリア内のキャラクター画像は削除済み -->
         </div>
         <!-- 保存直後のアドバイス表示 -->
         <div id="advice" class="mt-4 text-sm text-gray-700"></div>
@@ -79,7 +81,7 @@
     <!-- ヘッダー -->
     <header class="bg-white shadow p-4 flex justify-between items-center">
       <div class="flex items-center space-x-3">
-        <img src="https://placekitten.com/50/50" alt="Detail Icon" class="rounded-full border-2 border-purple-300">
+        <!-- 記録詳細ページのキャラクターアイコン（削除済み） -->
         <h1 class="text-2xl font-bold">記録詳細 &amp; アドバイス</h1>
       </div>
       <button onclick="backToMain()" class="bg-gray-500 hover:bg-gray-600 text-white py-1 px-3 rounded">戻る</button>
@@ -159,7 +161,7 @@
         alert("日記を入力してください");
         return;
       }
-      const recordDate = document.getElementById('recordDate').value; // YYYY-MM-DD
+      const recordDate = document.getElementById('recordDate').value;
       
       // o3mini の API を利用した高度な感情解析（非同期処理）
       let analysis;
@@ -195,7 +197,7 @@
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer YOUR_API_KEY'  // 必要に応じて API キーを設定
+          'Authorization': 'Bearer YOUR_API_KEY'
         },
         body: JSON.stringify({ text: text })
       });
@@ -203,7 +205,6 @@
         throw new Error('API エラー');
       }
       const data = await response.json();
-      // 例：data = { emotion: "ポジティブ", score: 8 }
       return data;
     }
 
@@ -241,7 +242,6 @@
         const count = text.split(item.word).length - 1;
         score -= count * item.weight;
       });
-      // スコア増幅
       score = score * 1.5;
       if(score > 10) score = 10;
       if(score < -10) score = -10;
@@ -287,7 +287,6 @@
           </div>
           <p>${entry.text.substring(0, 50)}${entry.text.length > 50 ? "..." : ""}</p>
         `;
-        // クリックで詳細画面へ遷移
         entryDiv.setAttribute('data-id', entry.id);
         entryDiv.addEventListener('click', () => { viewDiaryDetail(entry.id); });
         diaryList.appendChild(entryDiv);
@@ -336,7 +335,6 @@
           <button onclick="deleteRecord(${entry.id})" class="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded">この記録を削除</button>
         </div>
       `;
-      // セレクトの値を現在の感情に合わせる
       document.getElementById('emotionSelect').value = entry.emotion;
     }
 
@@ -376,12 +374,10 @@
     }
 
     // ★ グラフ更新 ★
-    // 現在のユーザーの記録を「記録日」ごとにグループ化し、平均スコアを算出して表示
     let emotionChart;
     function updateChart() {
       if (!currentUser) return;
       const userEntries = diaryEntries.filter(entry => entry.user === currentUser);
-      // 日付ごとに集計: { date: { sum, count } }
       const dateMap = {};
       userEntries.forEach(entry => {
         const date = entry.recordDate;
